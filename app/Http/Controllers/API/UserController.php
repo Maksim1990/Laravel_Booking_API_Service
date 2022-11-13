@@ -13,6 +13,12 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except(['show']);
+    }
+
     public function index()
     {
         return new UserCollection(User::all());
@@ -33,7 +39,11 @@ class UserController extends Controller
 
         $validated = $validator->safe()->only(['name', 'email', 'password']);
         $validated['password'] = Hash::make('password', ['rounds' => 12,]);
-        $user = User::create($validated);
+        #$user = User::create($validated);
+
+        $token = $request->user()->createToken($validated['password']);
+
+        return ['token' => $token->plainTextToken];
         return response()->json([
             'data' => sprintf("User with ID %s was successfully created", $user->id)
         ]);
