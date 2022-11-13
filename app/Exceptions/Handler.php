@@ -47,22 +47,24 @@ class Handler extends ExceptionHandler
     {
         $this->renderable(function (NotFoundHttpException $e, $request) {
             if ($request->is('api/*')) {
-                return response()->json([
-                    'message' => 'Record not found.'
-                ], 404);
+                return response()->error(
+                    code: 404,
+                    message: 'Route not found'
+                );
             }
         });
 
         $this->renderable(function (AuthenticationException $e, $request) {
             if ($request->is('api/*')) {
-                return response()->json([
-                    'message' => 'Not authenticated request.'
-                ], 403);
+                return response()->error(
+                    code: 403,
+                    message: 'Not authenticated request.'
+                );
             }
         });
 
         $this->reportable(function (Throwable $e) {
-            dd($e);
+            //
         });
     }
 }

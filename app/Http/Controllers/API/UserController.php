@@ -39,11 +39,8 @@ class UserController extends Controller
 
         $validated = $validator->safe()->only(['name', 'email', 'password']);
         $validated['password'] = Hash::make('password', ['rounds' => 12,]);
-        #$user = User::create($validated);
+        $user = User::create($validated);
 
-        $token = $request->user()->createToken($validated['password']);
-
-        return ['token' => $token->plainTextToken];
         return response()->json([
             'data' => sprintf("User with ID %s was successfully created", $user->id)
         ]);
@@ -53,7 +50,9 @@ class UserController extends Controller
 
     public function show(User $user)
     {
-        return new UserResource($user);
+        return response()->success(
+            data: new UserResource($user)
+        );
     }
 
 
