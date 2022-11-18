@@ -49,7 +49,10 @@ class Handler extends ExceptionHandler
             if ($request->is('api/*')) {
                 return response()->error(
                     code: 404,
-                    message: 'Route not found'
+                    message: 'Route or Model not found',
+                    errors: [
+                        'message' => $e->getMessage()
+                    ]
                 );
             }
         });

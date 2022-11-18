@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Services\UserActivationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -41,9 +44,7 @@ class UserController extends Controller
         $validated['password'] = Hash::make('password', ['rounds' => 12,]);
         $user = User::create($validated);
 
-        return response()->json([
-            'data' => sprintf("User with ID %s was successfully created", $user->id)
-        ]);
+        return response()->success(message: sprintf("User with ID %s was successfully created", $user->id));
 
 
     }
@@ -75,15 +76,44 @@ class UserController extends Controller
         $user->update(
             $validator->safe()->only(['name', 'email'])
         );
-        return new UserResource($user);
+        return response()->success(
+            data: new UserResource($user)
+        );
     }
 
 
     public function destroy(User $user)
     {
         $user->delete();
-        return response()->json([
-            'data' => sprintf("User with ID %s was successfully deleted", $user->id)
-        ]);
+        return response()->success(message: sprintf("User with ID %s was successfully deleted", $user->id));
+    }
+
+    public function changeStatus(
+        Request $request,
+        User $user,
+        UserActivationService $activationService
+    ) {
+        $validator = Validator::make(
+            $request->all(),
+            ['status' => 'required|in:active,pending,disabled'],
+            ['status' => 'Provided status is invalid.']
+        );
+
+        if ($validator->fails()) {
+            return response()->error(
+                errors: $validator->errors(),
+                code: 422
+            );
+        }
+
+        $status = $validator->getData()['status'];
+        $activationService->changeUserStatus($user, StatusEnum::getEnumValue($status));
+        return response()->success(
+            message: sprintf(
+                'Status for the user with ID %s set to %s',
+                $user->id,
+                $status
+            )
+        );
     }
 }

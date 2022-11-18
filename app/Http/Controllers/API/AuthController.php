@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Enums\StatusEnum;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -69,7 +70,8 @@ class AuthController extends Controller
         }
 
         $validated = $validator->safe()->only(['name', 'email', 'password']);
-        $validated['password'] = Hash::make('password', ['rounds' => 12,]);
+        $validated['password'] = Hash::make('password', ['rounds' => 12]);
+        $validated['status'] = StatusEnum::PENDING->getStringValue();
 
         $user = User::create($validated);
         $token = Auth::login($user);
@@ -103,5 +105,4 @@ class AuthController extends Controller
                 ]
             ]);
     }
-
 }

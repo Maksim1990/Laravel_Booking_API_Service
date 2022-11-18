@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('users', UserController::class);
+Route::post('users/{user}/status',[UserController::class, 'changeStatus']);
 
 # Auth routes
 Route::post('auth/login',[AuthController::class, 'login']);
