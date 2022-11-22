@@ -7,9 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\User;
-use App\Services\UserActivationService;
+use App\Services\UserActivationServiceInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -91,7 +90,7 @@ class UserController extends Controller
     public function changeStatus(
         Request $request,
         User $user,
-        UserActivationService $activationService
+        UserActivationServiceInterface $activationService
     ) {
         $validator = Validator::make(
             $request->all(),

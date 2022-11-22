@@ -6,7 +6,7 @@ use App\Enums\StatusEnum;
 use App\Exceptions\InvalidUserStatusException;
 use App\Models\User;
 
-class UserActivationService
+class UserActivationService implements UserActivationServiceInterface
 {
     public function changeUserStatus(User $user, ?StatusEnum $status): User
     {

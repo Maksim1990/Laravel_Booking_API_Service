@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\UserActivationService;
+use App\Services\UserActivationServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +25,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->app->bind(UserActivationServiceInterface::class, UserActivationService::class);
     }
 }
