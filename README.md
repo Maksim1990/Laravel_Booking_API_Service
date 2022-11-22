@@ -13,7 +13,11 @@ docker exec -it app_laravel bash
 ```
 vendor/bin/phpspec run
 ```
-3. Run PHPUnit tests
+4. Run PHPUnit tests
 ```
 vendor/bin/phpunit
+```
+5. Run Behat tests
+```
+vendor/bin/behat
 ```
