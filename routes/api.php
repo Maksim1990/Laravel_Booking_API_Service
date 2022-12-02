@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\Auth\AdminController;
+use App\Http\Controllers\API\Auth\SignupController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\SystemController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,10 +22,28 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('users', UserController::class);
+Route::get('version', [SystemController::class, 'version']);
+
+Route::apiResource('users', AdminController::class);
+
+
 
 # Auth routes
-Route::post('auth/login',[AuthController::class, 'login']);
-Route::post('auth/register',[AuthController::class, 'register']);
-Route::post('auth/logout',[AuthController::class, 'logout'])->middleware('auth:api');
-Route::post('auth/refresh',[AuthController::class, 'refresh'])->middleware('auth:api');
+Route::prefix('auth')->group(function () {
+    Route::prefix('admin')->group(function () {
+        Route::post('/login', [AdminController::class, 'login']);
+        Route::post('/register', [AdminController::class, 'register']);
+        Route::post('/logout', [AdminController::class, 'logout']);
+        Route::post('/refresh', [AdminController::class, 'refresh']);
+        Route::post('/{admin}/status', [AdminController::class, 'changeStatus']);
+    });
+    Route::prefix('user')->group(function () {
+        Route::post('/login', [SignupController::class, 'login']);
+        Route::post('/register', [SignupController::class, 'register']);
+        Route::post('/resend-confirmation-code', [SignupController::class, 'resendConfirmationCode']);
+        Route::post('/confirm-registration', [SignupController::class, 'confirmRegistration']);
+        Route::post('/change-password', [SignupController::class, 'changePassword']);
+    });
+});
+
+

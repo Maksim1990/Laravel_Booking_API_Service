@@ -1,0 +1,18 @@
+default:
+  formatters:
+    progress:
+  suites:
+    api_system:
+      paths: [ features/api/system ]
+      contexts:
+        - rdx\behatvars\BehatVariablesContext
+        - BaseFeatureContext
+  extensions:
+    rdx\behatvars\BehatVariablesExtension: ~
+    Imbo\BehatApiExtension:
+      apiClient:
+        base_uri: http://nginx:80
+        #base_uri: http://localhost:8000
+        #timeout: 5.0
+        verify: false
+

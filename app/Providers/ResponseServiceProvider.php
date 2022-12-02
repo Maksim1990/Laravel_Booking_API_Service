@@ -16,7 +16,7 @@ class ResponseServiceProvider extends ServiceProvider
      */
     public function boot(ResponseFactory $factory)
     {
-        $factory->macro('success', function ($message = null, $data = null) use ($factory) {
+        $factory->macro('success', function ($message = null, $data = null, int $code = 200) use ($factory) {
             $format = ResponseServiceProvider::DEFAULT_RESPONSE_STRUCTURE;
             if ($message) {
                 $format['message'] = $message;
@@ -26,7 +26,10 @@ class ResponseServiceProvider extends ServiceProvider
                 $format['data'] = $data;
             }
 
-            return $factory->make($format);
+            return $factory->make(
+                content: $format,
+                status: $code
+            );
         });
 
         $factory->macro('error', function (string $message = '', $errors = [], int $code = 500) use ($factory) {
@@ -37,7 +40,10 @@ class ResponseServiceProvider extends ServiceProvider
                 'errors' => $errors,
             ];
 
-            return $factory->make($format);
+            return $factory->make(
+                content: $format,
+                status: $code
+            );
         });
     }
 
