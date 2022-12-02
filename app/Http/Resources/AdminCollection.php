@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-class UserCollection extends BaseCollection
+class AdminCollection extends BaseCollection
 {
     public function toArray($request)
     {

@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject
+class Admin extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, HasUuids;
 
@@ -24,8 +24,6 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'status',
         'password',
-        'id',
-        'cognito_client_id',
     ];
 
     /**
